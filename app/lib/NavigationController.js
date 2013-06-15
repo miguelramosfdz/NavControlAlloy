@@ -2,8 +2,15 @@ function NavigationController() {
 	this.windowStack = [];
 };
 
-NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen) {
+NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen,HideNavBar) {
 	Ti.API.log("Open function.");
+	if(HideNavBar){
+        Ti.API.log("hide default navigation bar");
+        windowToOpen.navBarHidden = true;
+        }
+    else
+        windowToOpen.navBarHidden = windowToOpen.navBarHidden || false;
+    
 	//add the window to the stack of windows managed by the controller
 	this.windowStack.push(windowToOpen);
 
@@ -32,7 +39,7 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen) {
 			// open dependent window ?
 			if (this.toOpen) {
 				Ti.API.log("Invoke open on dependent window:" + this.toOpen.title);
-			 	that.open(this.toOpen);
+			 	that.open(this.toOpen,,this.HideNavBar);
 			} 
 		
 			Ti.API.log("End event 'close'. Stack: " + that.windowStack.map(function(v) {return v.title}));
@@ -47,6 +54,7 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen) {
 	windowToOpen.addEventListener('set.to.open', function(dict) {
 		Ti.API.log("Event 'set.to.open': " + this.title);
 		this.toOpen = dict.win;
+		this.HideNavBar = dict.HideNavBar;
 	});
 
 	//hack - setting this property ensures the window is "heavyweight" (associated with an Android activity)
@@ -79,6 +87,15 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen) {
 	Ti.API.log("End Open. Stack: " + this.windowStack.map(function(v) {return v.title}));
 }; // end of open function
 
+//close current window
+NavigationController.prototype.back = function() {
+    Ti.API.log("Back function.");
+    if (this.windowStack.length > 1) {
+        (this.navGroup) ? this.navGroup.close(this.windowStack[this.windowStack.length - 1]) : this.windowStack[this.windowStack.length - 1].close();
+    }
+    Ti.API.log("End Back. Stack: " + this.windowStack.map(function(v) {return v.title}));
+};
+
 //go back to the initial window of the NavigationController
 NavigationController.prototype.home = function() {
 	Ti.API.log("Home function.");
@@ -95,14 +112,14 @@ NavigationController.prototype.home = function() {
 	Ti.API.log("End Home. Stack: " + this.windowStack.map(function(v) {return v.title}));
 };
 
-NavigationController.prototype.openFromHome = function(windowToOpen) {
+NavigationController.prototype.openFromHome = function(windowToOpen, HideNavBar) {
 	Ti.API.log("openFromHome function.");
 	if(this.windowStack.length == 1)
-		this.open(windowToOpen);
+		this.open(windowToOpen,HideNavBar);
 	else
 	{
 		// delegate opening of the window to last window to close
-		this.windowStack[1].fireEvent('set.to.open', {win: windowToOpen});
+		this.windowStack[1].fireEvent('set.to.open', {win: windowToOpen, HideNavBar: HideNavBar});
 		this.home();
 	}
 	Ti.API.log("End openFromHome. Stack: " + this.windowStack.map(function(v) {return v.title}));
