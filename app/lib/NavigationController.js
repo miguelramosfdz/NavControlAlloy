@@ -39,7 +39,7 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen,Hide
 			// open dependent window ?
 			if (this.toOpen) {
 				Ti.API.log("Invoke open on dependent window:" + this.toOpen.title);
-			 	that.open(this.toOpen,,this.HideNavBar);
+			 	that.open(this.toOpen,this.HideNavBar);
 			} 
 		
 			Ti.API.log("End event 'close'. Stack: " + that.windowStack.map(function(v) {return v.title}));
@@ -90,8 +90,9 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen,Hide
 //close current window
 NavigationController.prototype.back = function() {
     Ti.API.log("Back function.");
-    if (this.windowStack.length > 1) {
-        (this.navGroup) ? this.navGroup.close(this.windowStack[this.windowStack.length - 1]) : this.windowStack[this.windowStack.length - 1].close();
+    var wsl = this.windowStack.length;
+    if (wsl > 1) {
+        (this.navGroup) ? this.navGroup.close(this.windowStack[wsl - 1]) : this.windowStack[wsl - 1].close();
     }
     Ti.API.log("End Back. Stack: " + this.windowStack.map(function(v) {return v.title}));
 };
@@ -99,15 +100,16 @@ NavigationController.prototype.back = function() {
 //go back to the initial window of the NavigationController
 NavigationController.prototype.home = function() {
 	Ti.API.log("Home function.");
-	if (this.windowStack.length > 1) {
+	var wsl = this.windowStack.length;
+	if (wsl > 1) {
 		// setup chain reaction by setting up the flags on all the windows
-		for (var i = this.windowStack.length - 1; i > 1; i--)
+		for (var i = wsl - 1; i > 1; i--)
 		{
 			// set dependent window
 			this.windowStack[i].fireEvent('set.to.close', {win: this.windowStack[i - 1]});
        	}
         // start chain reaction, close first window
-		(this.navGroup) ? this.navGroup.close(this.windowStack[this.windowStack.length - 1]) : this.windowStack[this.windowStack.length - 1].close();
+		(this.navGroup) ? this.navGroup.close(this.windowStack[wsl - 1]) : this.windowStack[wsl - 1].close();
 	}
 	Ti.API.log("End Home. Stack: " + this.windowStack.map(function(v) {return v.title}));
 };

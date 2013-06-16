@@ -1,22 +1,25 @@
 function Controller() {
-    function addClick(e) {
+    function addClick() {
         Alloy.Globals.navcontroller.open(Alloy.createController("TestWindow").getView());
     }
-    function homeClick(e) {
+    function homeClick() {
         Alloy.Globals.navcontroller.home();
     }
-    function addfhClick(e) {
+    function addfhClick() {
         Alloy.Globals.navcontroller.openFromHome(Alloy.createController("TestWindow").getView());
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
-    $model = arguments[0] ? arguments[0].$model : null;
-    var $ = this, exports = {}, __defers = {};
+    arguments[0] ? arguments[0]["__parentSymbol"] : null;
+    arguments[0] ? arguments[0]["$model"] : null;
+    var $ = this;
+    var exports = {};
+    var __defers = {};
     $.__views.TestWindowView = Ti.UI.createWindow({
         backgroundColor: "white",
         id: "TestWindowView",
         layout: "vertical"
     });
-    $.addTopLevelView($.__views.TestWindowView);
+    $.__views.TestWindowView && $.addTopLevelView($.__views.TestWindowView);
     $.__views.add = Ti.UI.createButton({
         top: 20,
         width: 200,
@@ -25,7 +28,7 @@ function Controller() {
         title: "Add A New Window"
     });
     $.__views.TestWindowView.add($.__views.add);
-    addClick ? $.__views.add.addEventListener("click", addClick) : __defers["$.__views.add!click!addClick"] = !0;
+    addClick ? $.__views.add.addEventListener("click", addClick) : __defers["$.__views.add!click!addClick"] = true;
     $.__views.home = Ti.UI.createButton({
         top: 20,
         width: 200,
@@ -34,7 +37,7 @@ function Controller() {
         title: "Go to the Home Window"
     });
     $.__views.TestWindowView.add($.__views.home);
-    homeClick ? $.__views.home.addEventListener("click", homeClick) : __defers["$.__views.home!click!homeClick"] = !0;
+    homeClick ? $.__views.home.addEventListener("click", homeClick) : __defers["$.__views.home!click!homeClick"] = true;
     $.__views.addfh = Ti.UI.createButton({
         top: 20,
         width: 200,
@@ -43,7 +46,7 @@ function Controller() {
         title: "Open New From Home"
     });
     $.__views.TestWindowView.add($.__views.addfh);
-    addfhClick ? $.__views.addfh.addEventListener("click", addfhClick) : __defers["$.__views.addfh!click!addfhClick"] = !0;
+    addfhClick ? $.__views.addfh.addEventListener("click", addfhClick) : __defers["$.__views.addfh!click!addfhClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.TestWindowView.title = "Window " + Alloy.Globals.navcontroller.windowStack.length;
@@ -53,6 +56,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._, $model;
+var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

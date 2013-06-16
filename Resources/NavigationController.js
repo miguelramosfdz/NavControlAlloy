@@ -2,10 +2,15 @@ function NavigationController() {
     this.windowStack = [];
 }
 
-NavigationController.prototype.open = function(windowToOpen) {
+NavigationController.prototype.open = function(windowToOpen, HideNavBar) {
     Ti.API.log("Open function.");
+    if (HideNavBar) {
+        Ti.API.log("hide default navigation bar");
+        windowToOpen.navBarHidden = true;
+    } else windowToOpen.navBarHidden = windowToOpen.navBarHidden || false;
     this.windowStack.push(windowToOpen);
-    var that = this, lastPushed = windowToOpen;
+    var that = this;
+    var lastPushed = windowToOpen;
     windowToOpen.addEventListener("close", function() {
         if (that.windowStack.length > 1) {
             Ti.API.log("Event 'close': " + this.title);
@@ -17,14 +22,14 @@ NavigationController.prototype.open = function(windowToOpen) {
             if (this.toClose) {
                 Ti.API.log("Invoke close on dependent window:" + this.toClose.title);
                 that.navGroup ? that.navGroup.close(this.toClose, {
-                    animated: !1
+                    animated: false
                 }) : this.toClose.close({
-                    animated: !1
+                    animated: false
                 });
             }
             if (this.toOpen) {
                 Ti.API.log("Invoke open on dependent window:" + this.toOpen.title);
-                that.open(this.toOpen);
+                that.open(this.toOpen, this.HideNavBar);
             }
             Ti.API.log("End event 'close'. Stack: " + that.windowStack.map(function(v) {
                 return v.title;
@@ -38,10 +43,11 @@ NavigationController.prototype.open = function(windowToOpen) {
     windowToOpen.addEventListener("set.to.open", function(dict) {
         Ti.API.log("Event 'set.to.open': " + this.title);
         this.toOpen = dict.win;
+        this.HideNavBar = dict.HideNavBar;
     });
-    windowToOpen.navBarHidden = windowToOpen.navBarHidden || !1;
-    if (this.windowStack.length === 1) if (Ti.Platform.osname === "android") {
-        windowToOpen.exitOnClose = !0;
+    windowToOpen.navBarHidden = windowToOpen.navBarHidden || false;
+    if (1 === this.windowStack.length) if ("android" === Ti.Platform.osname) {
+        windowToOpen.exitOnClose = true;
         windowToOpen.open();
     } else {
         this.navGroup = Ti.UI.iPhone.createNavigationGroup({
@@ -50,30 +56,41 @@ NavigationController.prototype.open = function(windowToOpen) {
         var containerWindow = Ti.UI.createWindow();
         containerWindow.add(this.navGroup);
         containerWindow.open();
-    } else Ti.Platform.osname === "android" ? windowToOpen.open() : this.navGroup.open(windowToOpen);
+    } else "android" === Ti.Platform.osname ? windowToOpen.open() : this.navGroup.open(windowToOpen);
     Ti.API.log("End Open. Stack: " + this.windowStack.map(function(v) {
+        return v.title;
+    }));
+};
+
+NavigationController.prototype.back = function() {
+    Ti.API.log("Back function.");
+    var wsl = this.windowStack.length;
+    wsl > 1 && (this.navGroup ? this.navGroup.close(this.windowStack[wsl - 1]) : this.windowStack[wsl - 1].close());
+    Ti.API.log("End Back. Stack: " + this.windowStack.map(function(v) {
         return v.title;
     }));
 };
 
 NavigationController.prototype.home = function() {
     Ti.API.log("Home function.");
-    if (this.windowStack.length > 1) {
-        for (var i = this.windowStack.length - 1; i > 1; i--) this.windowStack[i].fireEvent("set.to.close", {
+    var wsl = this.windowStack.length;
+    if (wsl > 1) {
+        for (var i = wsl - 1; i > 1; i--) this.windowStack[i].fireEvent("set.to.close", {
             win: this.windowStack[i - 1]
         });
-        this.navGroup ? this.navGroup.close(this.windowStack[this.windowStack.length - 1]) : this.windowStack[this.windowStack.length - 1].close();
+        this.navGroup ? this.navGroup.close(this.windowStack[wsl - 1]) : this.windowStack[wsl - 1].close();
     }
     Ti.API.log("End Home. Stack: " + this.windowStack.map(function(v) {
         return v.title;
     }));
 };
 
-NavigationController.prototype.openFromHome = function(windowToOpen) {
+NavigationController.prototype.openFromHome = function(windowToOpen, HideNavBar) {
     Ti.API.log("openFromHome function.");
-    if (this.windowStack.length == 1) this.open(windowToOpen); else {
+    if (1 == this.windowStack.length) this.open(windowToOpen, HideNavBar); else {
         this.windowStack[1].fireEvent("set.to.open", {
-            win: windowToOpen
+            win: windowToOpen,
+            HideNavBar: HideNavBar
         });
         this.home();
     }
