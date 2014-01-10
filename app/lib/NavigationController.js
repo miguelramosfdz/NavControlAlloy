@@ -33,7 +33,7 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen,Hide
 			if (this.toClose) {
 				Ti.API.log("Invoke close on dependent window:" + this.toClose.title);
 			 	// close "parent" window, do not use animation (it looks weird with animation)
-			 	(that.navGroup) ? that.navGroup.close(this.toClose, {animated : false}) : this.toClose.close({animated:false});
+			 	(that.navGroup) ? that.navGroup.closeWindow(this.toClose, {animated : false}) : this.toClose.close({animated:false});
 			}
 			
 			// open dependent window ?
@@ -42,7 +42,7 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen,Hide
 			 	that.open(this.toOpen,this.HideNavBar);
 			} 
 		
-			Ti.API.log("End event 'close'. Stack: " + that.windowStack.map(function(v) {return v.title}));
+			Ti.API.log("End event 'close'. Stack: " + that.windowStack.map(function(v) {return v.title;}));
 		} // end if windowStack.length > 1, and end of my hack
 	}); // end eventListener 'close'
 	
@@ -66,14 +66,16 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen,Hide
 			windowToOpen.exitOnClose = true;
 			windowToOpen.open();
 		} else {
-			this.navGroup = Ti.UI.iPhone.createNavigationGroup({
+			this.navGroup = Ti.UI.iOS.createNavigationWindow({
 				window : windowToOpen
 			});
 			
 			// let's use the NavigationController's createWindow function to create a window here
-			var containerWindow = Ti.UI.createWindow();
-			containerWindow.add(this.navGroup);
-			containerWindow.open();
+			//var containerWindow = Ti.UI.createWindow();
+			//containerWindow.add(this.navGroup);
+			//containerWindow.open();
+			//todo
+			this.navGroup.open();
 		}
 	}
 	//All subsequent windows
@@ -81,10 +83,10 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen,Hide
 		if (Ti.Platform.osname === 'android') {
 			windowToOpen.open();
 		} else {
-			this.navGroup.open(windowToOpen);
+			this.navGroup.openWindow(windowToOpen);
 		}
 	}
-	Ti.API.log("End Open. Stack: " + this.windowStack.map(function(v) {return v.title}));
+	Ti.API.log("End Open. Stack: " + this.windowStack.map(function(v) {return v.title;}));
 }; // end of open function
 
 //close current window
@@ -92,9 +94,9 @@ NavigationController.prototype.back = function() {
     Ti.API.log("Back function.");
     var wsl = this.windowStack.length;
     if (wsl > 1) {
-        (this.navGroup) ? this.navGroup.close(this.windowStack[wsl - 1]) : this.windowStack[wsl - 1].close();
+        (this.navGroup) ? this.navGroup.closeWindow(this.windowStack[wsl - 1]) : this.windowStack[wsl - 1].close();
     }
-    Ti.API.log("End Back. Stack: " + this.windowStack.map(function(v) {return v.title}));
+    Ti.API.log("End Back. Stack: " + this.windowStack.map(function(v) {return v.title;}));
 };
 
 //go back to the initial window of the NavigationController
@@ -109,9 +111,9 @@ NavigationController.prototype.home = function() {
 			this.windowStack[i].fireEvent('set.to.close', {win: this.windowStack[i - 1]});
        	}
         // start chain reaction, close first window
-		(this.navGroup) ? this.navGroup.close(this.windowStack[wsl - 1]) : this.windowStack[wsl - 1].close();
+		(this.navGroup) ? this.navGroup.closeWindow(this.windowStack[wsl - 1]) : this.windowStack[wsl - 1].close();
 	}
-	Ti.API.log("End Home. Stack: " + this.windowStack.map(function(v) {return v.title}));
+	Ti.API.log("End Home. Stack: " + this.windowStack.map(function(v) {return v.title;}));
 };
 
 NavigationController.prototype.openFromHome = function(windowToOpen, HideNavBar) {
@@ -124,7 +126,7 @@ NavigationController.prototype.openFromHome = function(windowToOpen, HideNavBar)
 		this.windowStack[1].fireEvent('set.to.open', {win: windowToOpen, HideNavBar: HideNavBar});
 		this.home();
 	}
-	Ti.API.log("End openFromHome. Stack: " + this.windowStack.map(function(v) {return v.title}));
+	Ti.API.log("End openFromHome. Stack: " + this.windowStack.map(function(v) {return v.title;}));
 };
 
 module.exports = NavigationController;
