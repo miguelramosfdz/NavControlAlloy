@@ -5,3 +5,10 @@ npm-debug.log
 tmp*.class
 *.pyc
 *.pyo
+build/
+Resources/
+Resources/*
+Resources
+.DS_Store
+*.prefs
+.settings/com.appcelerator.titanium.mobile.prefs
