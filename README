@@ -1,18 +1,17 @@
-Welcome to your Appcelerator Titanium Mobile Project
+Cross platform navigation controller for Appcelerator Titanium Alloy
+It is a mobile app that displays a series of windows in an easily navigable stack.
 
-This is a blank project.  Start by editing your application's app.js to 
-make your first mobile project using Titanium.
+Updated to support 3.2.0.GA & changes for Ti.UI.iOS.createNavigationWindow
+Extended open method to support suppressing default navigation bar as well as added a close method to dispose of
+current window in the stack
 
 
+project forked from https://github.com/vuinguyen/NavControlAlloy
 
-----------------------------------
-Stuff our legal folk make us say:
+Original project was a dirivitive of the Cross-Platform NavigationController written by
+Kevin Whinnery and modified by Matthew Lanham. 
+https://github.com/kwhinnery/
+https://github.com/appcelerator-developer-relations/Forging-Titanium/tree/master/ep-002
+https://github.com/swanify/Titanium-Navigation-Controller
 
-Appcelerator, Appcelerator Titanium and associated marks and logos are 
-trademarks of Appcelerator, Inc. 
-
-Titanium is Copyright (c) 2008-2012 by Appcelerator, Inc. All Rights Reserved.
-
-Titanium is licensed under the Apache Public License (Version 2). Please
-see the LICENSE file for the full license.
 
