@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
-    <id>com.sunfishempire.navcontrolalloy</id>
+    <id>com.n3wc.navcontrolalloy</id>
     <name>NavControlAlloy</name>
     <version>1.0</version>
-    <publisher>not specified</publisher>
-    <url>not specified</url>
-    <description>not specified</description>
+    <publisher>n3wc</publisher>
+    <url>https://github.com/n3wc/NavControlAlloy</url>
+    <description>https://github.com/n3wc/NavControlAlloy</description>
     <copyright>not specified</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
@@ -37,9 +37,7 @@
         </splash>
         <theme>default</theme>
     </mobileweb>
-    <modules>
-        <module platform="android" version="1.0">ti.physicalSizeCategory</module>
-    </modules>
+    <modules/>
     <deployment-targets>
         <target device="tizen">false</target>
         <target device="blackberry">false</target>

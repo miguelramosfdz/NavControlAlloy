@@ -2,7 +2,10 @@
 	<!--<Window class="container"> -->
 	<Window id = "TestWindowView" layout ='vertical'>
 		<Button id = "add" onClick = "addClick" title = "Add A New Window" />
+		<Button id = "addNoNav" onClick = "addClickNoNav" title = "Add A New Window Without Nav" />
         <Button id = "home" onClick = "homeClick" title = "Go to the Home Window" />
-        <Button id = "addfh" onClick = "addfhClick" title = "Open New From Home">
+        <Button id = "addfh" onClick = "addfhClick" title = "Open New From Home" />
+        <Button id = "close" onClick = "closeClick" title = "Close this window" />
+        	
 	</Window>
 </Alloy>

@@ -69,12 +69,6 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen,Hide
 			this.navGroup = Ti.UI.iOS.createNavigationWindow({
 				window : windowToOpen
 			});
-			
-			// let's use the NavigationController's createWindow function to create a window here
-			//var containerWindow = Ti.UI.createWindow();
-			//containerWindow.add(this.navGroup);
-			//containerWindow.open();
-			//todo
 			this.navGroup.open();
 		}
 	}
@@ -90,7 +84,7 @@ NavigationController.prototype.open = function(/*Ti.UI.Window*/windowToOpen,Hide
 }; // end of open function
 
 //close current window
-NavigationController.prototype.back = function() {
+NavigationController.prototype.close = function() {
     Ti.API.log("Back function.");
     var wsl = this.windowStack.length;
     if (wsl > 1) {
