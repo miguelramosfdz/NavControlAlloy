@@ -1,11 +1,41 @@
-Cross platform navigation controller for Appcelerator Titanium Alloy
-It is a mobile app that displays a series of windows in an easily navigable stack.
+Cross platform (ios,android) navigation controller for Appcelerator Titanium Alloy 3.2.0.GA
+(updated to accomodate Ti.UI.iOS.createNavigationWindow)
+1/15/14 - made the commonjs implementation into an alloy widget.
 
-Updated to support 3.2.0.GA & changes for Ti.UI.iOS.createNavigationWindow
+add the following to your config.json
+
+"dependencies": {
+        "com.n3wc.navcontrolleralloy": "1.0"
+    }
+
+then to create a new nav controller:
+var NavigationController = Alloy.createWidget("com.n3wc.navcontrolleralloy",{logging:true});
+Alloy.Globals.navcontroller = NavigationController.navController;
+
+use it to open a new window:
+var testwin = Alloy.createController('TestWindow').getView();
+Alloy.Globals.navcontroller.open(testwin);
+
+
+methods:
+//open a new window
+open(/*Ti.UI.Window*/windowToOpen,/*bool*/HideNavBar);
+
+//close current window
+close();
+
+//go back to the initial window of the NavigationController
+home();
+
+//go back to the initial window of the NavigationController then open a new window
+openFromHome(/*Ti.UI.Window*/windowToOpen,/*bool*/HideNavBar);
+
+project forked from https://github.com/vuinguyen/NavControlAlloy
+Made it a widget and updated it to support 3.2.0.GA & changes for Ti.UI.iOS.createNavigationWindow
 Extended open method to support suppressing default navigation bar as well as added a close method to dispose of current window in the stack
 
 
-project forked from https://github.com/vuinguyen/NavControlAlloy
+
 
 Original project was a derivative of the Cross-Platform NavigationController written by
 Kevin Whinnery and modified by Matthew Lanham. 
