@@ -1,4 +1,4 @@
-var NavigationController = Alloy.createWidget("com.n3wc.navcontrolleralloy");
+var NavigationController = Alloy.createWidget("com.n3wc.navcontrolleralloy",{logging:true});
 Alloy.Globals.navcontroller = NavigationController.navController;
 
 
